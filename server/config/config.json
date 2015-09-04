@@ -1,0 +1,30 @@
+{
+  "PORT": 8000,
+  
+  "sentiments": {
+    "liked": "Like",
+    "disliked": "Dislike"
+  },
+  "slideCount": 10,
+  "middleware": {
+    "appsec": { "enabled": false },
+    "webpack": {
+      "priority": 117,
+      "module": "path:./middleware/webpack"
+    },
+    "groupLog": {
+      "priority": 118,
+      "module": {
+        "name": "path:./middleware/group",
+        "arguments": []
+      }
+    },
+    "validateSentiment": {
+      "priority": 119,
+      "module": {
+        "name": "path:./middleware/validate-sentiment",
+        "arguments": ["config:slideCount", "config:sentiments"]
+      }
+    }
+  }
+}
