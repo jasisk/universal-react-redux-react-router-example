@@ -1,5 +1,5 @@
 import { KEY as storeKey } from '../lib/store';
-import reactRender from './react-render';
+import reactRender from '../lib/react-render';
 import sentiment from './sentiment';
 
 export default function routes(router) {
