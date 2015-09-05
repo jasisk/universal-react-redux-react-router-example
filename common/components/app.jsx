@@ -2,6 +2,7 @@ import * as Actions from '../actions/creators';
 import SentimentsBar from './sentiments-bar';
 import SlideNavBar from './slide-nav-bar';
 import { connect } from 'react-redux';
+import Controller from './controller';
 import { Link } from 'react-router';
 import Websocket from './websocket';
 import React from 'react';
@@ -37,15 +38,17 @@ export default class App extends React.Component {
     } = this.props;
 
     return (
-      <Websocket>
-        <div>
-          <p>Connections {connections}</p>
-          <SlideNavBar {...{idx, onDecrement, onIncrement}}/>
-          <SentimentsBar {...slide} {...{counts, sentiments, addSentiment, removeSentiment}} />
-          <Link to='/party'>PARTY</Link>
-          {children}
-        </div>
-      </Websocket>
+      <Controller>
+        <Websocket>
+          <div>
+            <p>Connections {connections}</p>
+            <SlideNavBar {...{idx, onDecrement, onIncrement}}/>
+            <SentimentsBar {...slide} {...{counts, sentiments, addSentiment, removeSentiment}} />
+            <Link to='/party'>PARTY</Link>
+            {children}
+          </div>
+        </Websocket>
+      </Controller>
     );
   }
 }
