@@ -53,13 +53,11 @@ export class ReqStore {
 
   changeSentiment(add, sid, sentiment) {
     if (!(this.Store.validateSentiment(sentiment) && this.Store.validateSid(sid))) {
-      console.log('valid');
       return false;
     }
     let sentiments = this.getSentimentsBySid(sid);
     if (add) {
       if (includes(sentiments, sentiment)) {
-        console.log('already includes');
         return false;
       }
       sentiments.push(sentiment);
@@ -67,7 +65,6 @@ export class ReqStore {
     } else {
       let idx;
       if (!~(idx = sentiments.indexOf(sentiment))) {
-        console.log('does not include');
         return false;
       }
       sentiments.splice(idx, 1);
