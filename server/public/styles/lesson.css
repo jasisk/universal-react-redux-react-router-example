@@ -13,6 +13,7 @@ h1, h2, h3 {
   font-weight: 400;
   margin-bottom: 0;
 }
+h4 { margin: .3em 0; }
 .remark-slide-content h1 { font-size: 3em; }
 .remark-slide-content h2 { font-size: 2em; }
 .remark-slide-content h3 { font-size: 1.6em; }
@@ -61,8 +62,17 @@ code {
 .pull-right ~ p {
   clear: both;
 }
-.pull-contain {
+.pull-left pre, .pull-right pre {
+  margin: .3em 0;
+}
+.pull-contain,
+.pull-contain-code {
   overflow: hidden;
+}
+.pull-contain-code {
+  margin: .5em 0;
+  padding: 0 .5em;
+  background-color: #DAF0F7;
 }
 #slideshow .slide .content code {
   font-size: 0.8em;
@@ -81,10 +91,21 @@ code {
   color: #777872;
   text-shadow: 0 0 20px #333;
 }
+.paypal h1, .paypal h2, .paypal h3,
+.inverse h1, .inverse h2, .inverse h3 {
+  margin: .5em 0;
+  line-height: 1.33em;
+}
+.paypal h1,
+.inverse h1 {
+  margin: .1em 0;
+}
 .paypal h1, .paypal h2,
 .inverse h1, .inverse h2 {
   color: #f3f3f3;
-  line-height: 0.8em;
+}
+.paypal .footnote {
+  border-top-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Slide-specific styling */

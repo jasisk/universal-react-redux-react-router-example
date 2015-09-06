@@ -1,5 +1,5 @@
 var slideshow = remark.create({
-  highlightStyle: 'monokai',
+  highlightStyle: 'github',
   highlightLanguage: 'javascript'
 }) ;
 var iframe = document.createElement('iframe');

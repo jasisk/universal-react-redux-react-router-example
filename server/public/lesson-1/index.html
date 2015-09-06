@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Universality - Lesson 1</title>
+    <link href="/styles/lesson.css" rel="stylesheet" type="text/css">
+  </head>
+  <body data-lesson-index="0">
+    <textarea id="source">
+class: center, middle, paypal
+## Lesson 1:
+### ES2015 / ES6 / ES7 / EScetera<sup>.red[1]</sup>
+
+.footnote[<sup>.red[1]</sup> I just made up this term but I like it]
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+## What are these things<br>and why are they important?
+---
+layout: false
+### History
+
+JavaScript, as a language, has been showing its warts for a number of years.
+
+ES2015 (which you may know as ES6) is the current ECMAScript standard. As it was just finalized this summer, the new language features it introduced are slowly but surely making their way into our JavaScript runtimes.
+
+Many of the features defined in the ES2015 standard trace their roots back to other languages&mdash;you will often notice similarities between a new feature and another dialect or language.
+
+These new features, while jarring at first, become second-nature quickly and eventually become downright pleasant to use.
+
+???
+
+Going over just a few features that come up over and over. Important because, e.g., we'll be using some tools that are very new or even still in beta.
+
+When googling, it often helps to append "ES6"
+
+---
+template: inverse
+## A Few New Features
+---
+### Arrow Functions (aka, Fat Arrow Functions)
+
+A new language feature that will be immediately familiar to anyone with Ruby or CoffeeScript experience, arrow functions are a terse way to define anonymous functions that are scoped based on the lexical context. One-liners will also automatically `return` a value for you.
+
+```
+var timer = {
+  name: 'Jean-Charles',
+  create: function () {
+    var self = this;
+    this.instance = setTimeout(function (greeting) {
+      console.log(greeting + self.name);
+    }, 1000, 'Hello ');
+  }
+};
+```
+
+```
+let timer = {
+  name: 'Jean-Charles',
+  create() {
+    this.instance = setTimeout(
+      greeting => console.log(greeting + this.name),
+    1000, 'Hello ');
+  }
+};
+```
+
+???
+lexical: think of static. `this` will resolve to the surround context.
+
+point out `let` and new object syntax as well.
+
+---
+### Enhanced Object Literals
+
+An object literal is when you define an `Object` using the curly-brace syntax (e.g., `{}`). The syntax has now been enhanced with a few new ways to define things.
+
+``` js
+var obj = {
+    // __proto__
+    __proto__: theProtoObj,
+    // Shorthand for ‘handler: handler’
+    handler,
+    // Methods
+    toString() {
+     // Super calls
+     return "d " + super.toString();
+    },
+    // Computed (dynamic) property names
+    [ 'prop_' + (() => 42)() ]: 42
+};
+```
+
+???
+
+example stolen outright from es6features
+
+we've had getters and setters for a while
+
+---
+
+### Destructuring
+
+Destructuring is a feature we, as part of the JavaScript developer community, have been collectively laughed at for not having for years. It is yet another feature that allows us to be more terse (but generally not at the sacrifice of legibility).
+
+.pull-contain[
+.pull-left[
+#### Before
+]
+.pull-right[
+#### After
+]
+]
+<hr>
+.pull-contain[
+.pull-left[
+``` js
+var letters = [1, 2, 3];
+var a = letters[0];
+var b = letters[1];
+var c = letters[2];
+```
+]
+.pull-right[
+``` js
+let [a, b, c] = [1, 2, 3];
+```
+]
+]
+<hr>
+.pull-contain[
+.pull-left[
+``` js
+var letters = {a: 1, b: 2, c: 3};
+var a = letters.a;
+var b = letters.b;
+var c = letters.c;
+```
+]
+.pull-right[
+``` js
+let {a, b, c} = {a: 1, b: 2, c: 3};
+```
+]
+]
+<hr>
+.pull-contain[
+.pull-left[
+``` js
+var x = this.something.else;
+```
+]
+.pull-right[
+``` js
+let { something: { else: x } } = this;
+```
+]
+]
+
+???
+
+point out how the third example is more robust and how you can use it with shorthand
+---
+### Modules (!!!)
+Modules, another lacking feature often pointed to as a wart in JavaScript, has finally arrived. However the approach we node developers are generally familiar with (Common JS) is not it.
+
+.pull-contain[
+.pull-left[
+#### Before
+]
+.pull-right[
+#### After
+]
+]
+<hr>
+.pull-contain[
+.pull-left[
+``` js
+// dependency
+module.exports = {a: 1, b: 2};
+// usage
+var thing = require('./dependency');
+```
+]
+.pull-right[
+``` js
+// dependency
+export default {a: 1, b: 2};
+// usage
+import thing from './dependency';
+```
+]
+]
+<hr>
+.pull-contain[
+.pull-left[
+``` js
+// dependency
+module.exports = {a: 1, b: 2};
+// usage
+var a = require('./dependency').a;
+var b = require('./dependency').b;
+
+```
+]
+.pull-right[
+``` js
+// dependency
+export const a = 1;
+export const b = 2;
+// usage
+import {a, b} from './dependency';
+// ... or ...
+import * as Deps; // Deps.a, Deps.b
+```
+]
+]
+
+---
+template: inverse
+### for more information,<br>visit [git.io/es6features](http://git.io/es6features)
+---
+class: center, middle, paypal
+## Let's try it out &hellip;
+    </textarea>
+    <script src="/js/remark-latest.min.js"></script>
+    <script src="/js/slideshow-init.js"></script>
+    <style>.remark-presenter-mode iframe {right: auto; left: 0;}</style>
+  </body>
+</html>
