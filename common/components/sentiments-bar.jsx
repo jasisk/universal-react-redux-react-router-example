@@ -1,15 +1,25 @@
 import Sentiment from './sentiment';
 import React from 'react';
 
+
+const style = {
+  listStyleType: 'none',
+  padding: 0,
+  margin: 0,
+  overflow: 'hidden'
+};
+
 export default class SentimentsBar extends React.Component {
   constructor(props, context) {
     super(props, context);
-    // this.toggleSentiment = this.toggleSentiment.bind(this);
   }
 
   toggleSentimentThunk(sentiment) {
     const { sentiments, is, addSentiment, removeSentiment } = this.props;
-    return (e) => includes(is, sentiment) ? removeSentiment(sentiment) : addSentiment(sentiment);
+    return (e) => {
+      e.preventDefault();
+      includes(is, sentiment) ? removeSentiment(sentiment) : addSentiment(sentiment)
+    };
   }
 
   render() {
@@ -25,7 +35,7 @@ export default class SentimentsBar extends React.Component {
       />
     });
 
-    return <ul>{Sentiments}</ul>;
+    return <ul style={style}>{Sentiments}</ul>;
   }
 }
 

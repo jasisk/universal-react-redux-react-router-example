@@ -7,6 +7,10 @@ import { Link } from 'react-router';
 import Websocket from './websocket';
 import React from 'react';
 
+const style = {
+  fontFamily: "Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol'",
+};
+
 @connect(
   state => {
     let {
@@ -23,32 +27,30 @@ import React from 'react';
 )
 export default class App extends React.Component {
   render() {
-
-    const {
-      incrementSlide: onIncrement,
-      decrementSlide: onDecrement,
-      removeSentiment,
-      slideIdx: idx,
-      addSentiment,
-      connections,
-      sentiments,
-      children,
-      counts,
-      slide
-    } = this.props;
-
     return (
       <Controller>
         <Websocket>
-          <div>
-            <p>Connections {connections}</p>
-            <SlideNavBar {...{idx, onDecrement, onIncrement}}/>
-            <SentimentsBar {...slide} {...{counts, sentiments, addSentiment, removeSentiment}} />
-            <Link to='/party'>PARTY</Link>
-            {children}
-          </div>
+          <MainBar {...this.props}></MainBar>
         </Websocket>
       </Controller>
+    );
+  }
+}
+
+export class MainBar extends React.Component {
+  render () {
+    const { children } = this.props;
+    const { wsState, connections } = this.props;
+    const { slideIdx: idx, decrementSlide: onDecrement, incrementSlide: onIncrement } = this.props;
+    const { slide, counts, sentiments, addSentiment, removeSentiment } = this.props;
+    const className = `state-${wsState}`;
+    return (
+      <div className={className} style={style}>
+        <SlideNavBar {...{idx, onDecrement, onIncrement}}/>
+        {children && React.cloneElement(children, { connections })}
+        <SentimentsBar {...slide} {...{counts, sentiments, addSentiment, removeSentiment}} />
+      </div>
+
     );
   }
 }

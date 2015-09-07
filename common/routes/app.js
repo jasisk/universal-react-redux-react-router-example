@@ -1,7 +1,7 @@
 import App from '../components/app';
-import Party from './party';
+import Connections from './connections';
 export default {
   path: '/',
   component: App,
-  childRoutes: [ Party ]
+  childRoutes: [ Connections ]
 };
