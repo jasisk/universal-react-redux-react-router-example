@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Universality - Lesson 3 - Redux</title>
+    <link href="/styles/lesson.css" rel="stylesheet" type="text/css">
+  </head>
+  <body data-lesson-index="3">
+    <textarea id="source">
+name: warning
+layout: true
+class: center, middle, warning
+---
+name: paypal
+layout: true
+class: center, middle, paypal
+---
+## Lesson 3:
+### Redux
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+## What is this thing<br>and why is it important?
+---
+layout: false
+### Background
+
+[Redux] is a very simple, relatively new data store. It has roots in Facebook's [flux] but also is greatly influenced by functional programming languages like [Elm].
+
+Before we begin to describe it, it helps to understand what flux was trying to accomplish and then we'll go in to how redux simplifies it.
+
+[redux]: http://rackt.github.io/redux/
+[flux]: http://facebook.github.io/flux/
+[elm]: http://elm-lang.org
+---
+template: inverse
+## First, a bit of controversy: flux
+---
+### Flux
+
+Flux, at it's core, is merely the dispatcher pattern. It follows the same tenet set in React of having one-way data flow.
+
+All opportunities for data mutation (called, &ldquo;Actions&rdquo;) are dispatched to a central broker. The broker (or, &ldquo;Dispatcher&rdquo;) emits those actions out to each Store, which contain data and business logic for how to mutate with a given action. The stores then emit out an event, essentially declaring themselves to being updated, at which point our views grab our data from the stores.
+
+[<img src="images/flux-f8-diagram.png" style="width:100%;">](http://facebook.github.io/flux/docs/overview.html)
+
+???
+if the dispatcher emits to all stores, and all stores emit to dependent views, why dispatcher?
+Think of a traffic dispatcher: may need to wait for one store to resolve before updating another.
+---
+### Flux (Continued)
+Actions should always be in past tense (something that happened). It is also possible for actions to be dispatched at any point in the lifecycle. These two facts should demonstrate how something like optimistic updating can take place.
+
+For example, if a `WORKSHOP_LIKED` event is emitted, we can optimistically increment a `Likes` store, and fire off a XHR request to commit the like.
+
+When then XHR comes back, we can emit a new action (`WORKSHOP_LIKE_FAILED` or `WORKSHOP_LIKE_SUCCEEDED`), which the stores can respond to accordingly (e.g., on failure, the like store can decrement the like count).
+
+???
+Other stores can listen for `WORKSHOP_LIKE_FAILED`, too. Perhaps an `ErrorMessages` store that pushes a new message.
+---
+template: inverse
+## Why Redux?
+### How does it improve upon flux?
+---
+### Redux
+
+Redux&mdash;the new kid on the block&mdash;was built in an attempt to simplify the flux model. In order to make your app easier to reason about, redux eschews multiple stores for a single one. Actions are dispatched into your store, and processed alongside your data by a single reducer function.
+
+A reducer is just a pure function that, given a state object and an action, returns a state object. In other words, it describes how actions change the state of your app.
+
+.pull-contain[
+.pull-left[
+``` js
+function counter(state = 0, action) {
+  switch (action.type) {
+  case: 'INCREMENT':
+    return state + 1;
+  }
+  default:
+    return state;
+  }
+}
+export default counter;
+```
+]
+
+.pull-right[
+``` js
+import { createStore } from 'redux';
+import counter from './counter';
+const store = createStore(counter);
+
+function logState() {
+  console.log(store.getState());
+}
+
+store.subscribe(logState);
+
+logState();
+// logs 0
+store.dispatch({ type: 'INCREMENT' });
+// logs 1
+```
+]
+]
+---
+### Redux (Continued)
+
+Your reducer should never mutate the state object directly. Rather, it should return a new state object. This ends up being helpful for two reasons:
+
+1. Comparing state between transitions is as easy as `state === newState`
+2. Undo/Redo capabilities are just baked in this way
+
+Additionally, be aware that, although a `store` can only take a single reducer function, you can simply use functional composition to operate on many different pieces of your state object.
+
+???
+
+Since react works by comparing your data objects in order to determine what needs to be rerendered, this helps ensure performance is not sacrified when used in combination with `shouldComponentUpdate`.
+
+---
+template: inverse
+## Connecting Redux with React
+---
+### Connecting Redux with React
+
+React and Redux are completely orthoganal&mdash;you can use each separately. However, using the two in tandem is pretty straight forward.
+
+Since the store emits when a change has occured, you could write a simple function:
+
+``` js
+store.subscribe(() => {
+  const state = store.getState();
+  myComponent.setProps(state);
+  });
+```
+
+Of course, this solution isn't terribly granular and you'd end up having to pass your store instance around everywhere (not only for subscribing but also for dispatching actions).
+
+Turns out, someone has already done the work necessary to clean things up a bit &hellip;
+---
+template: inverse
+## React-Redux
+---
+### React-Redux
+**React-Redux** provides you with two objects: A `Provider` component, and a `connect` method.
+
+- `Provider` - a component that you provide your store to and in-which you wrap your app
+- `connect` a method that returns a higher-order component which has superpowers
+---
+### React-Redux (Continued)
+.small[
+.pull-contain[
+.pull-left[
+``` js
+import { connect } from 'react-redux';
+import React from 'react';
+class DumbColor extends React.Component {
+  render() {
+    const { color, switchColor } = this.props;
+    return (
+      <p onClick={switchColor}>
+        my favorite color is { color }
+      </p>
+    );
+  }
+}
+export default connect(
+  state => ({ color: state }),
+  dispatch => {
+    let colors = ['red', 'white', 'blue'];
+    return {switchColor: () => {
+      let color = colors.pop();
+      colors.unshift(color);
+      dispatch({ type: 'COLOR_PICKED', color });
+    }};
+  }
+)(DumbColor);
+```
+]
+.pull-right[
+``` js
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import Color from './color';
+import React from 'react';
+let store = createStore(reducer);
+
+React.render(
+  <Provider store={store}>
+    {() => <Color />}
+  </Provider>,
+  document.body
+);
+
+function reducer(state = 'red', action) {
+  switch(action.type) {
+  case 'COLOR_PICKED':
+    return action.color;
+  default:
+    return state;
+  };
+}
+```
+]
+]
+]
+---
+template: paypal
+## Let's try it out &hellip;
+### &hellip; and then move on to [lesson 4](../lesson-4)
+
+    </textarea>
+    <script src="/js/remark-latest.min.js"></script>
+    <script src="/js/slideshow-init.js"></script>
+    <style>.remark-presenter-mode iframe {right: auto; left: 0;}</style>
+  </body>
+</html>
