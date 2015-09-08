@@ -51,11 +51,16 @@ function sentimentThunk(add) {
         sid
       });
 
-      //let request = Promise.resolve({ status: 200 });
+      let headers = { 'content-type': 'application/json' };
+
+      if (document && typeof document.cookie === 'string') {
+        let token = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+        token = decodeURIComponent(token);
+        headers['X-XSRF-TOKEN'] = token;
+      }
+
       let request = fetch(`/presentation/${pid}/sentiment`, {
-        headers: {
-          'content-type': 'application/json'
-        },
+        headers,
         credentials: 'include',
         method: 'POST',
         body: JSON.stringify({

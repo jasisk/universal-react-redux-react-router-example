@@ -10,7 +10,14 @@
     "2": 6
   },
   "middleware": {
-    "appsec": { "enabled": false },
+    "appsec": {
+      "module": {
+        "arguments": [{
+          "csrf": { "angular": true },
+          "xframe": "SAMEORIGIN"
+        }]
+      }  
+    },
     "webpack": {
       "priority": 117,
       "module": "path:./middleware/webpack"
