@@ -16,12 +16,15 @@ const opts = onconfigThunk(args('session'))({
   onconfig: function (config, next) {
     const [{ store: sessionStore, name, secret }] = config.get(args('session'));
     const group = new ConnectionGroup({store: sessionStore, name, secret});
-    const slideCount = config.get('slideCount');
     const sentiments = config.get('sentiments');
-    const store = new Store(slideCount, sentiments);
+    const presentations = config.get('presentations');
+    const stores = Object.keys(presentations).reduce((stores, presentation) => {
+      stores[presentation] = new Store(presentations[presentation], sentiments);
+      return stores;
+    }, {});
 
     config.set(groupKey, group);
-    config.set(storeKey, store);
+    config.set(storeKey, stores);
 
     groupLog(group);
 

@@ -5,7 +5,9 @@
     "liked": "Like",
     "disliked": "Dislike"
   },
-  "slideCount": 10,
+  "presentations": {
+    "1": 10  
+  },
   "middleware": {
     "appsec": { "enabled": false },
     "webpack": {
