@@ -1,0 +1,7 @@
+{
+  "middleware": {
+    "error": {
+      "enabled": true
+    }
+  }
+}

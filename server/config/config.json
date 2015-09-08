@@ -32,6 +32,11 @@
     "webpack": {
       "priority": 117,
       "module": "path:./middleware/webpack"
+    },
+    "error": {
+      "enabled": false,
+      "priority": 121,
+      "module": "path:./middleware/error"
     }
   }
 }
