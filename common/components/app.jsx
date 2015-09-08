@@ -8,6 +8,7 @@ import Websocket from './websocket';
 import React from 'react';
 
 const style = {
+  textAlign: 'center',
   fontFamily: "Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol'",
 };
 
@@ -41,14 +42,12 @@ export class MainBar extends React.Component {
   render () {
     const { children } = this.props;
     const { wsState, connections } = this.props;
-    const { slideIdx: idx, decrementSlide: onDecrement, incrementSlide: onIncrement } = this.props;
     const { slide, counts, sentiments, addSentiment, removeSentiment } = this.props;
     const className = `state-${wsState}`;
     return (
       <div className={className} style={style}>
-        <SlideNavBar {...{idx, onDecrement, onIncrement}}/>
-        {children && React.cloneElement(children, { connections })}
         <SentimentsBar {...slide} {...{counts, sentiments, addSentiment, removeSentiment}} />
+        {children && React.cloneElement(children, { connections })}
       </div>
 
     );

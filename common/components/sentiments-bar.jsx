@@ -6,7 +6,9 @@ const style = {
   listStyleType: 'none',
   padding: 0,
   margin: 0,
-  overflow: 'hidden'
+  display: 'inline-block',
+  verticalAlign: 'middle',
+  fontSize: '16px'
 };
 
 export default class SentimentsBar extends React.Component {

@@ -13,19 +13,18 @@ iframe.addEventListener('load', function () {
       iframe.contentWindow.changeSlide(cid);
       slideshow.on('showSlide', function (slide) {
         var cid = slide.getSlideIndex();
-        iframe.contentWindow.changeSlide(cid);  
+        iframe.contentWindow.changeSlide(cid);
       });
       iframe.contentWindow.removeEventListener('message', onMessage, false);
-    }  
+    }
   });
 }, false);
 iframe.style.position = 'absolute';
 iframe.style.top = 0;
 iframe.style.right = 0;
-iframe.style.width = '300px';
-iframe.style.height = '200px';
+iframe.style.width = '100%';
+iframe.style.height = '80px';
 iframe.style.zIndex = 100;
 iframe.style.borderWidth = 0;
-iframe.style.backgroundColor = 'white';
-iframe.src = window.location.protocol + '//' + window.location.host + '/presentation/universality-' + lessonIdx;
+iframe.src = window.location.protocol + '//' + window.location.host + '/presentation/universality-' + lessonIdx + '/connections';
 document.body.appendChild(iframe);

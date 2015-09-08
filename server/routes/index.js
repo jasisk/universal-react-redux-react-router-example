@@ -39,6 +39,8 @@ function sentimentRoutes(router) {
     res.send(`
 <!doctype html>
 <html>
+  <head>
+    <link href="/styles/main.css" rel="stylesheet" type="text/css">
   <body>
     <div id="app">${html}</div>
     <script>

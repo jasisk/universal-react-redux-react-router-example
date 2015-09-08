@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+}
+
+.emojiLink {
+  opacity: 0.7
+}
+
+.emojiLink:active, .emojiLink:hover, .emojiLink.active {
+  opacity: 1
+}
+
+.state-0 .connections { background-color: #8BC6F1; }
+.state-1 .connections { background-color: #a1ff83; }
+.state-2 .connections { background-color: #F78383; }
+.state-3 .connections { background-color: #F78383; }
+
+.emoji {
+  background-size: 24px 24px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+.e1f44d {background-image: url('../images/emoji/1f44d.png');}
+.e1f44e {background-image: url('../images/emoji/1f44e.png');}
+.e1f638 {background-image: url('../images/emoji/1f638.png');}
+.e1f639 {background-image: url('../images/emoji/1f639.png');}
+.e1f63a {background-image: url('../images/emoji/1f63a.png');}
+.e1f63b {background-image: url('../images/emoji/1f63b.png');}
+.e1f63c {background-image: url('../images/emoji/1f63c.png');}
+.e1f63d {background-image: url('../images/emoji/1f63d.png');}
+.e1f63e {background-image: url('../images/emoji/1f63e.png');}
+.e1f63f {background-image: url('../images/emoji/1f63f.png');}
+.e1f640 {background-image: url('../images/emoji/1f640.png');}

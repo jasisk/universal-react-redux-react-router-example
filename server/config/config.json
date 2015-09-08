@@ -2,13 +2,23 @@
   "PORT": 8000,
 
   "sentiments": {
-    "liked": "Like",
-    "disliked": "Dislike"
+    "1f44d": "Like",
+    "1f44e": "Dislike",
+    "1f638": "1f638",
+    "1f639": "1f639",
+    "1f63a": "1f63a",
+    "1f63b": "1f63b",
+    "1f63c": "1f63c",
+    "1f63d": "1f63d",
+    "1f63e": "1f63e",
+    "1f63f": "1f63f",
+    "1f640": "1f640"
   },
   "presentations": {
     "universality-0": 6,
     "universality-1": 10,
-    "universality-2": 16
+    "universality-2": 16,
+    "universality-3": 15
   },
   "middleware": {
     "appsec": {
@@ -17,7 +27,7 @@
           "csrf": { "angular": true },
           "xframe": "SAMEORIGIN"
         }]
-      }  
+      }
     },
     "webpack": {
       "priority": 117,
