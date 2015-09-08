@@ -1,0 +1,7 @@
+{
+  "middleware": {
+    "webpack": {
+      "enabled": false  
+    }  
+  }
+}
