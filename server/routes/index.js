@@ -25,6 +25,8 @@ export default function routes(router) {
 function sentimentRoutes(router) {
   router.post('/sentiment', validateSentiment(), sentiment);
 
+  router.get('/store', (req, res) => res.json(req.store.withReq(req).toObject()));
+
   router.get('*', (req, res) => {
     const { store, app: { kraken: config } } = req;
     const reqStore = store.withReq(req);

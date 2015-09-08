@@ -18,20 +18,21 @@ function initStore(slideCount, sentiments, presentationIdx) {
   };
 }
 
-function initSession(session) {
-  session.sentiments = session.sentiments || [];
+function initSession(session, pid) {
+  session.sentiments = session.sentiments || {};
+  return session.sentiments[pid] = session.sentiments[pid] || [];
 }
 
 export class ReqStore {
   constructor(req, store) {
     this.Store = store;
     this.req = req;
-    initSession(req.session);
+    this.sessionStore = initSession(req.session, store.store.presentationIdx);
   }
 
   toObject() {
     let StoreObject = this.Store.toObject();
-    let sentiments = this.req.session.sentiments;
+    let sentiments = this.sessionStore;
     let count = this.Store.slideCount;
 
     let slides = [];
@@ -78,7 +79,7 @@ export class ReqStore {
     if (!(this.Store.validateSid(sid))) {
       return false;
     }
-    let { req: { session: { sentiments } } } = this;
+    let sentiments = this.sessionStore;
     sentiments = sentiments[sid] || (sentiments[sid] = {});
     return sentiments.is = sentiments.is || (sentiments.is = []);
   }

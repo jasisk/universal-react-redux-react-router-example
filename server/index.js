@@ -19,6 +19,7 @@ const opts = onconfigThunk(args('session'))({
     const sentiments = config.get('sentiments');
     const presentations = config.get('presentations');
     const stores = Object.keys(presentations).reduce((stores, presentation) => {
+      console.log('adding store for', presentation);
       stores[presentation] = new Store(presentations[presentation], sentiments, presentation);
       return stores;
     }, {});
