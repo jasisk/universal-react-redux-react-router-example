@@ -29,7 +29,7 @@ function sentimentThunk(add) {
 
   return (sentiment) => (dispatch, getState) => {
     const [REQUESTED, SUCCEEDED, FAILED, INVALID] = events;
-    const { entities: { slides, sentiments }, slideIdx: sid } = getState();
+    const { entities: { slides, sentiments }, slideIdx: sid, presentationIdx: pid } = getState();
     let slide = slides[sid];
     let keys = Object.keys(sentiments);
 
@@ -37,6 +37,7 @@ function sentimentThunk(add) {
       dispatch({
         type: INVALID,
         sentiment,
+        pid,
         sid
       });
       return;
@@ -51,7 +52,7 @@ function sentimentThunk(add) {
       });
 
       //let request = Promise.resolve({ status: 200 });
-      let request = fetch('/sentiment', {
+      let request = fetch(`/presentation/${pid}/sentiment`, {
         headers: {
           'content-type': 'application/json'
         },

@@ -19,7 +19,7 @@ const opts = onconfigThunk(args('session'))({
     const sentiments = config.get('sentiments');
     const presentations = config.get('presentations');
     const stores = Object.keys(presentations).reduce((stores, presentation) => {
-      stores[presentation] = new Store(presentations[presentation], sentiments);
+      stores[presentation] = new Store(presentations[presentation], sentiments, presentation);
       return stores;
     }, {});
 
@@ -30,7 +30,7 @@ const opts = onconfigThunk(args('session'))({
 
     function connectionCount() {
       let size = group.size;
-      store.store.connections = size;
+//      store.store.connections = size;
       group.send({
         type: 'CONNECTION_COUNT_CHANGED',
         count: size
@@ -61,4 +61,3 @@ app.on('start', function onStart() {
     console.log(`listening on ${listeningOn} ...`);
   });
 });
-

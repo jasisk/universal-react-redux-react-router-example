@@ -21,6 +21,10 @@ export function connections(state = 0, action) {
   }
 }
 
+export function presentationIdx(state = 0, action) {
+  return state;
+}
+
 export function entities(state = { sentiments: {}, slides: [], counts: [] }, action) {
   let entities = action.response && action.response.entities;
   if (entities) {

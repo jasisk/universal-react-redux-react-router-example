@@ -1,3 +1,4 @@
+import validateSentiment from '../middleware/validate-sentiment';
 import { KEY as storeKey } from '../lib/store';
 import reactRender from '../lib/react-render';
 import sentiment from './sentiment';
@@ -7,7 +8,7 @@ const sentimentRouter = new Router();
 sentimentRoutes(sentimentRouter);
 
 export default function routes(router) {
-  router.all('/presentation/:pid', sentimentRouter);
+  router.use('/presentation/:pid', sentimentRouter);
   router.param('pid', (req, res, next, pid) => {
     const { kraken: config } = req.app;
     const stores = config.get(storeKey);
@@ -15,20 +16,20 @@ export default function routes(router) {
       req.store = stores[pid];
       return next();
     }
-    error = new Error(`cannot find store with id: ${pid}`);
+    const error = new Error(`cannot find store with id: ${pid}`);
     error.code = 404;
     next(error);
   });
 };
 
 function sentimentRoutes(router) {
-  router.post('/sentiment', sentiment);
+  router.post('/sentiment', validateSentiment(), sentiment);
 
   router.get('*', (req, res) => {
     const { store, app: { kraken: config } } = req;
     const reqStore = store.withReq(req);
 
-    const {html, state} = reactRender(req.path, reqStore.toObject()); 
+    const {html, state} = reactRender(req.originalUrl, reqStore.toObject());
 
     res.send(`
 <!doctype html>

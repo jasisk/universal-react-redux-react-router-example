@@ -5,7 +5,6 @@ import {
   COUNTS_UPDATED
 } from '../../common/actions/types';
 import { KEY as groupKey } from '../lib/connection-group';
-import { KEY as storeKey } from '../lib/store';
 
 export default function () {
 
@@ -19,7 +18,7 @@ export default function () {
     } = req;
 
     const group = config.get(groupKey);
-    const store = config.get(storeKey);
+    const store = req.store;
 
     const reqStore = store.withReq(req);
 

@@ -1,12 +1,12 @@
 {
   "PORT": 8000,
-  
+
   "sentiments": {
     "liked": "Like",
     "disliked": "Dislike"
   },
   "presentations": {
-    "1": 10  
+    "1": 10
   },
   "middleware": {
     "appsec": { "enabled": false },
@@ -19,13 +19,6 @@
       "module": {
         "name": "path:./middleware/group",
         "arguments": []
-      }
-    },
-    "validateSentiment": {
-      "priority": 119,
-      "module": {
-        "name": "path:./middleware/validate-sentiment",
-        "arguments": ["config:slideCount", "config:sentiments"]
       }
     }
   }

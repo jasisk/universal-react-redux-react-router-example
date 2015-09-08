@@ -1,4 +1,4 @@
-function initStore(slideCount, sentiments) {
+function initStore(slideCount, sentiments, presentationIdx) {
   let keys = Object.keys(sentiments);
   return {
     entities: {
@@ -13,7 +13,8 @@ function initStore(slideCount, sentiments) {
       }, {}),
       slides: Array.apply(null, Array(slideCount)).map(() => ({ is: [] }))
     },
-    slideIdx: 0
+    slideIdx: 0,
+    presentationIdx: presentationIdx
   };
 }
 
@@ -42,7 +43,7 @@ export class ReqStore {
 
     return { ...StoreObject, entities: { ...StoreObject.entities, slides } };
   }
-  
+
   addSentiment(sid, sentiment) {
     return changeSentiment(true, sid, sentiment);
   }
@@ -69,7 +70,7 @@ export class ReqStore {
       }
       sentiments.splice(idx, 1);
       this.Store.decrementSlideSentiment(sid, sentiment);
-    } 
+    }
     return true;
   }
 
@@ -84,16 +85,16 @@ export class ReqStore {
 }
 
 export default class Store {
-  constructor(slideCount, sentiments) {
+  constructor(slideCount, sentiments, presentationIdx) {
     this.slideCount = slideCount;
     this.sentiments = Object.keys(sentiments);
-    this.store = initStore(slideCount, sentiments);
+    this.store = initStore(slideCount, sentiments, presentationIdx);
   }
 
   toObject() {
     return { ...this.store, entities: { ...this.store.entities } };
   }
-  
+
   withReq(req) {
     return new ReqStore(req, this);
   }
@@ -127,7 +128,7 @@ export default class Store {
     let { store: { entities: { counts } } } = this;
     return counts[sid] = counts[sid] || {};
   }
-  
+
   validateSid(sid) {
     return sid >=0 && sid < this.slideCount;
   }
