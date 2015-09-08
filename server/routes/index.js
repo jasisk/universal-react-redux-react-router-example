@@ -1,4 +1,5 @@
 import validateSentiment from '../middleware/validate-sentiment';
+import { KEY as groupKey } from '../lib/connection-group';
 import { KEY as storeKey } from '../lib/store';
 import reactRender from '../lib/react-render';
 import sentiment from './sentiment';
@@ -12,8 +13,10 @@ export default function routes(router) {
   router.param('pid', (req, res, next, pid) => {
     const { kraken: config } = req.app;
     const stores = config.get(storeKey);
+    const groups = config.get(groupKey);
     if (pid in stores) {
       req.store = stores[pid];
+      req.group = groups.get(pid);
       return next();
     }
     const error = new Error(`cannot find store with id: ${pid}`);

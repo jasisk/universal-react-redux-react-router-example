@@ -1,6 +1,39 @@
 import { unsign } from 'cookie-signature';
+import pathToRegexp from 'path-to-regexp';
 import { EventEmitter } from 'events';
 import { parse } from 'cookie';
+
+const routeRegex = pathToRegexp('/presentation/:pid/(.*)?', [], {end: true});
+
+
+export function onConnection({stores, groups}) {
+  return ws => {
+    let group;
+    const parts = routeRegex.exec(ws.upgradeReq.url);
+    const pid = parts && parts[1];
+    if (pid in stores) {
+      if (!(group = groups.get(pid))) {
+        group = groups.create(pid);
+
+        function connectionCount() {
+          let size = group.size;
+          stores[pid].store.connections = size;
+          group.send({
+            type: 'CONNECTION_COUNT_CHANGED',
+            count: size
+          });
+        }
+
+        group.on('add', () => group.once('change', connectionCount));
+        group.on('delete', connectionCount);
+        group.on('delete', () => {group.size || groups.delete(pid)});
+      }
+      group.newConnection(ws);
+    } else {
+      ws.close(1001);
+    }
+  };
+}
 
 export default class ConnectionGroup extends EventEmitter {
   constructor({store, name, secret}) {
@@ -15,17 +48,18 @@ export default class ConnectionGroup extends EventEmitter {
   get size() {
     return this.sessions.size;
   }
-  
+
   onConnection(callback) {
-    return ws => {
-      let session;
-      let { [this.name]: sid } = parse(ws.upgradeReq.headers.cookie);
-      sid = sid.substr(0, 2) === 's:' ? unsign(sid.slice(2), this.secret) : sid;
-      session = this.getSession(sid) || this.addSession(sid);
-      let connection = new Connection({ws, sid});
-      session.add(connection);
-      callback && callback({session, connection});
-    };
+    return (ws) => this.newConnection(ws, callback);
+  }
+  newConnection(ws, callback) {
+    let session;
+    let { [this.name]: sid } = parse(ws.upgradeReq.headers.cookie);
+    sid = sid.substr(0, 2) === 's:' ? unsign(sid.slice(2), this.secret) : sid;
+    session = this.getSession(sid) || this.addSession(sid);
+    let connection = new Connection({ws, sid});
+    session.add(connection);
+    callback && callback({session, connection});
   }
 
   getStore(sid, cb) {
@@ -65,10 +99,10 @@ export function defaultLogger(group) {
   group.on('add', sid =>
     console.log(`New sid (${sid}) (total: ${group.size}) ...`)
   );
-  group.on('delete', sid => 
+  group.on('delete', sid =>
     console.log(`Terminated (${sid}) (total: ${group.size}) ...`)
   );
-  group.on('change', (sid, size) => 
+  group.on('change', (sid, size) =>
     size && console.log(`Session size changed (${sid}): ${size} ...`)
   );
 };
@@ -115,7 +149,7 @@ class Connection {
   constructor({ws, sid}) {
     this.sid = sid;
     this.ws = ws;
-  }  
+  }
 
   close(code) {
     this.ws.close(code);

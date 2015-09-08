@@ -12,12 +12,12 @@ export default class Websocket extends React.Component{
 
   componentDidMount() {
     let { dispatch } = this.props;
-    let ws = new WebSocket(`ws://${location.host}`);
+    let ws = new WebSocket(`ws://${location.host}${location.pathname}`);
     ws.onopen = () => this.setState({ state: WebSocket.OPEN });
     ws.onclose = () => this.setState({ state: WebSocket.CLOSED });
     ws.onmessage = (e) => dispatch(JSON.parse(e.data));
   }
-  
+
   render() {
     let { children } = this.props;
     let { state: wsState } = this.state;

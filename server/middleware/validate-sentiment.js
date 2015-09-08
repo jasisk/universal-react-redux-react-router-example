@@ -4,7 +4,6 @@ import {
   SENTIMENT_UPDATED,
   COUNTS_UPDATED
 } from '../../common/actions/types';
-import { KEY as groupKey } from '../lib/connection-group';
 
 export default function () {
 
@@ -14,11 +13,10 @@ export default function () {
     const {
       sessionID,
       body: { sentiment, type, sid },
-      app: { kraken: config }
+      app: { kraken: config },
+      store,
+      group
     } = req;
-
-    const group = config.get(groupKey);
-    const store = req.store;
 
     const reqStore = store.withReq(req);
 
