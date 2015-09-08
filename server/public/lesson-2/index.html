@@ -2,12 +2,19 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Universality - Lesson 1</title>
+    <title>Universality - Lesson 2 - React</title>
     <link href="/styles/lesson.css" rel="stylesheet" type="text/css">
   </head>
   <body data-lesson-index="2">
     <textarea id="source">
+name: warning
+layout: true
+class: center, middle, warning
+---
+name: paypal
+layout: true
 class: center, middle, paypal
+---
 ## Lesson 2:
 ### React
 ---
@@ -20,8 +27,16 @@ class: center, middle, inverse
 layout: false
 ### Background
 
-React&mdash;a library released by facebook about two years ago&mdash;is a JavaScript library that focuses on one small aspect of our web applications: the views. Unlike most other similar libraries, React worries about bindings and DOM mutations for you. When your data changes, React intelligently determines the minial set of mutations necessary to bring the current UI up to date. It does so by building a tree, similar in representation to the DOM. However, since the DOM is merely a detail to React, it is not dependent on it.
+[React]&mdash;a library released by facebook about two years ago&mdash;is a JavaScript library that focuses on one small aspect of our web applications: views.
 
+Unlike most other, similar libraries, React worries about DOM mutations for you. When your data changes, React intelligently determines the minimal set of mutations necessary to bring the current UI up to date. It does so by building a tree similar in representation to the DOM. However, since the DOM is merely a detail to React, it is not dependent on it.
+
+With React, you supply your data and components, and it takes care of the rest.
+
+???
+because there is no dependency on the dom, directly, this makes React perfectly suitable for writing universal applications.
+
+[react]: http://facebook.github.io/react
 ---
 template: inverse
 ## First, a bit of controversy: JSX
@@ -39,6 +54,10 @@ var person = React.createElement(
   {name: window.name}
 );
 ```
+
+???
+
+I describe it as _optional_ because while technically true, it's a great convenience
 ---
 ### JSX (Continued)
 
@@ -55,9 +74,9 @@ var content = React.createElement(
 );
 ```
 ---
-template: paypal
+template: warning
 ## JSX is not HTML
-### There are differences
+### There are [differences](http://facebook.github.io/react/docs/jsx-gotchas.html)
 
 ???
 Primarily around property names. Typical JavaScriptisms still apply (`className` instead of `class`, camelCase instead of hyphenated, etc).
@@ -109,8 +128,8 @@ This goes back to the composition we've already talked about. In many cases, you
 ``` js
 // TODO
 class Parent extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { timerValue: 0 };
     this.increment = this.increment.bind(this);
   }
@@ -135,8 +154,39 @@ class Parent extends React.Component {
 ```
 ]
 ---
+template: inverse
+## Data flows one way
+### &hellip; but actions can be triggered from anywhere
+---
+### Passing functions to owned components
+
+In the same way that you pass `props` from owner to owned properties (aka, parent to child), you can pass functions. In fact, this is exactly how a child component _should_ communicate back to a parent.
+
+``` js
+import Parent from './parent';
+class Child extends React.Component {
+  render() {
+    const { onClick } = this.props;
+    return <button onClick={onClick} />;
+  }
+}
+```
+
+**Note**: JavaScript is a [call by sharing](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_sharing) language. Functions you pass won't be bound to the parent context automatically.
+
+``` js
+export default class Parent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+  }
+  onClick(evt) { /* `this` will always be the Parent instance */ }
+}
+```
+---
 class: center, middle, paypal
 ## Let's try it out &hellip;
+
     </textarea>
     <script src="/js/remark-latest.min.js"></script>
     <script src="/js/slideshow-init.js"></script>
