@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Universality - Lesson 4 - Server-Side Rendering</title>
+    <link href="/styles/lesson.css" rel="stylesheet" type="text/css">
+  </head>
+  <body data-lesson-index="4">
+    <textarea id="source">
+name: warning
+layout: true
+class: center, middle, warning
+---
+name: paypal
+layout: true
+class: center, middle, paypal
+---
+## Lesson 3:
+### Server-Side Rendering with React
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+layout: false
+### Background
+Given all the things we've learned about React so far&mdash;in particular, how it performs its DOM mutations after first performing updates on another tree structure (virtual DOM)—it should come as no surprise that rendering React components server-side is equally straight forward.
+
+While that's one extremely helpful chunk of work lifted off our plates, there still remains a few big, unanswered questions:
+
+1. How do I get my components and data packaged up and in a way that they can be rehydrated on the client?
+2. How do I deal with routing?
+
+First, lets see how React helps us.
+---
+template: inverse
+## Rendering React Components
+### &hellip; server-side
+---
+### Server-side rendering React components
+
+This will be the easiest part of this entire workshop.
+
+As you'll recall, the method signature for rendering React client-side is:
+``` js
+React.render(component, domNode);
+```
+
+To render on the server, it's as simple as:
+``` js
+React.renderToString(component);
+```
+
+That takes care of the rendering piece but ignores dehydrating / rehydrating the data that goes into that component. Which leads us to our next topic &hellip;
+???
+This method will be pulled into a separate module when React is split into React/ReactDOM
+---
+template: inverse
+## Sharing Data
+### Between server and client
+---
+### Sharing Data
+How do I get my state objects from the server to the client?
+
+There are a number of ways but the easiest is simply to dehydrate your store (meaning, get a representation of it that is parseable from clientside JS), and stuff it on the client on initial load. It may not be pretty but this gets the job done:
+``` js
+<script>window.__INITIAL_DATA__=object;</script>
+```
+This is an area where using something like [redux] really shines. With a single store object, the amount of work reconciling your state on the client goes from a big challenge to nearly automatic.
+
+``` js
+const store = createStore();
+// dispatch actions on the store to seed it ...
+const finalState = store.getState();
+const inclusion = `<script>window.__initial = ${finalState}</script>`;
+
+res.render(page, {snippet: inclusion});
+```
+[redux]: http://rackt.github.com/redux
+
+???
+
+Just one quick example. You could also have a special `createStore` you serve on initial requests, or XHR it in, etc.
+---
+template: inverse
+## React-Router
+---
+## React-Router
+One of the larger moving parts in our workshop, [react-router] is an extremely helpful module for writing a well organized app (not to mention, a universal one). It means largely eschewing the router that ships with expressjs, but that generally isn't a problem.
+
+React-router enables you to define a set of nested routes. When a route matches, the component tree that makes up that route is composed in your app. It takes care of handling many things for you, including `pushState` monitoring (if using `BrowserHistory`), etc.
+
+It also enables you to fetch portions of your application on-demand. That goes beyond the scope of this workshop but see the documentation for [getComponents](http://rackt.github.io/react-router/tags/v1.0.0-beta3.html#-getcomponents-state-cb-) and [getChildRoutes](http://rackt.github.io/react-router/tags/v1.0.0-beta3.html#-getchildroutes-state-callback-) for more info.
+
+[react-router]: http://rackt.github.io/react-router
+---
+template: warning
+## Warning: v1.0.0-beta4
+### The examples are using a beta API&mdash;
+### they are likely to change
+---
+### React-Router (Continued)
+The simplest implementation of React-Router will look something like this:
+``` js
+import { Router, Route } from 'react-router';
+import { createHistory } from 'history';
+import { Admin } from './components';
+import React from 'react';
+const history = createHistory();
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>welcome to my app</h1>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+React.render((
+  <Router history={history}>
+    <Route path='/' component={App}>
+      <Route path='admin' component={Components.Admin}/>
+    </Route>
+  </Router>
+), document.body);
+```
+
+???
+
+In this case, '/' will resolve and print the h1, while '/admin' will also resolve, printing the h1 and whatever is in `Components.Admin`.
+
+---
+### React-Router (Continued)
+
+The surface for react-router is fairly large, and the API is changing fairly rapidly, however a few on the notable features include:
+
+1. A `<Link>` component that automatically sets up navigation for you (with active state tracking)
+2. Component grouping, so that a route can define some components in multiple parts of a layout
+3. Absolute paths in route paths to maintain a similar layout, yet full control over the route
+4. `*` and `IndexRoute` for catch-all and un-nested routes
+5. Navigation API, transition callbacks, etc &hellip;
+---
+### React-Router - Server-side render
+This is currently in flux however, the API will look _something_ like the following:
+``` js
+let history = useRoutes(createHistory)({ routes });
+let location = createLocation('/');
+
+history.match(location, function (error, state) {
+  let string = React.renderToString(
+    <RoutingContext history={history} {...state} />
+  );
+});
+```
+
+For now, there are a few workarounds necessary (or you can always use the previous version but note that it has a vastly different API).
+---
+template: paypal
+## Let's try it out &hellip;
+### &hellip; and if there's time, we'll live-code an example of what we learned today
+
+    </textarea>
+    <script src="/js/remark-latest.min.js"></script>
+    <script src="/js/slideshow-init.js"></script>
+    <style>.remark-presenter-mode iframe {right: auto; left: 0;}</style>
+  </body>
+</html>

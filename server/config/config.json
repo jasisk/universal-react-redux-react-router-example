@@ -18,7 +18,8 @@
     "universality-0": 6,
     "universality-1": 10,
     "universality-2": 16,
-    "universality-3": 15
+    "universality-3": 15,
+    "universality-4": 13
   },
   "middleware": {
     "appsec": {

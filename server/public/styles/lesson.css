@@ -87,16 +87,16 @@ code {
   padding: 15px;
 }
 .warning {
-  background: #850e04;
+  background: #850e04 radial-gradient(ellipse farthest-corner at 50% 30%,#BF5047 0%, #850e04 70%, #3C0A05 100%);
   color: #ffd5dd;
 }
 .paypal {
-  background: #053385;
+  background: #053385 radial-gradient(ellipse farthest-corner at 50% 30%,#5479BB 0%, #053385 70%, #071A3C 100%);
   color: #199EDC;
   text-shadow: 0 0 20px #021435;
 }
 .inverse {
-  background: #272822;
+  background: #272822 radial-gradient(ellipse farthest-corner at 50% 30%,#41423B 0%, #272822 70%, #0A0A09 100%);
   color: #777872;
   text-shadow: 0 0 20px #333;
 }
@@ -184,4 +184,3 @@ code {
   float: right;
   padding-top: 1em;
 }
-
