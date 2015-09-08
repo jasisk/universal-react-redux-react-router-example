@@ -2,6 +2,7 @@ var slideshow = remark.create({
   highlightStyle: 'github',
   highlightLanguage: 'javascript'
 }) ;
+var lessonIdx = document.body.dataset.lessonIndex;
 var iframe = document.createElement('iframe');
 iframe.addEventListener('load', function () {
   iframe.contentWindow.addEventListener('click', function (e) { this.parent.focus(); });
@@ -26,5 +27,5 @@ iframe.style.height = '200px';
 iframe.style.zIndex = 100;
 iframe.style.borderWidth = 0;
 iframe.style.backgroundColor = 'white';
-iframe.src = window.location.protocol + '//' + window.location.host;
+iframe.src = window.location.protocol + '//' + window.location.host + '/presentation/universality-' + lessonIdx;
 document.body.appendChild(iframe);

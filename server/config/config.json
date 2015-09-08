@@ -6,8 +6,9 @@
     "disliked": "Dislike"
   },
   "presentations": {
-    "1": 10,
-    "2": 6
+    "universality-0": 6,
+    "universality-1": 10,
+    "universality-2": 14
   },
   "middleware": {
     "appsec": {
