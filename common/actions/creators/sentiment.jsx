@@ -51,7 +51,7 @@ function sentimentThunk(add) {
         sid
       });
 
-      let headers = { 'content-type': 'application/json' };
+      let headers = { 'accept': 'application/json', 'content-type': 'application/json' };
 
       if (document && typeof document.cookie === 'string') {
         let token = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');

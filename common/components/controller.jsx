@@ -12,7 +12,9 @@ export default class Controller extends React.Component {
     let { changeSlide } = this.props;
     if (window) {
       window.changeSlide = changeSlide;
-      window.postMessage('controller', '*');
+    }
+    if (window.parent && window.parent.onInit) {
+      window.parent.onInit();
     }
   }
 
