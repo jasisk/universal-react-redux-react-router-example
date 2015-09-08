@@ -28,6 +28,8 @@ h4 { margin: .3em 0; }
 p { line-height: 1.5em; }
 .red { color: #fa0000; }
 .large { font-size: 2em; }
+.small { font-size: 80%; }
+.small .remark-code { font-size: 90%; }
 sup { font-size: .6em; }
 .pay { color: #053385; }
 .pal { color: #199EDC; }
