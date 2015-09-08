@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Universality - Lesson 1</title>
+    <link href="/styles/lesson.css" rel="stylesheet" type="text/css">
+  </head>
+  <body data-lesson-index="0">
+    <textarea id="source">
+class: center, middle, paypal
+## Lesson 2:
+### React
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+## What is this thing<br>and why is it important?
+---
+layout: false
+### Background
+
+React&mdash;a library released by facebook about two years ago&mdash;is a JavaScript library that focuses on one small aspect of our web applications: the views. Unlike most other similar libraries, React worries about bindings and DOM mutations for you. When your data changes, React intelligently determines the minial set of mutations necessary to bring the current UI up to date. It does so by building a tree, similar in representation to the DOM. However, since the DOM is merely a detail to React, it is not dependent on it.
+
+---
+template: inverse
+## First, a bit of controversy: JSX
+---
+### JSX
+
+JSX is an _optional_ format for writing React components. It isn't anything more than a bit of sugar but&mdash;after using it a couple of times&mdash;it quickly becomes indispensible. It is truly completely optional but the only time people tend not to use it is when precompilation isn't possible (which, these days, is pretty rare).
+
+``` js
+// With JSX:
+var person = <Person name={window.name} />;
+// Without JSX:
+var person = React.createElement(
+  Person,
+  {name: window.name}
+);
+```
+---
+### JSX (Continued)
+
+JSX makes _composing_ your components feel very natural. Because of it's XML-like syntax, you end up writing structures that _appear_ very much like their HTML equivalents.
+
+``` js
+// With JSX:
+var content = <Container>{window.isLoggedIn ? <Nav /> : <Login />}</Container>;
+// Without JSX:
+var content = React.createElement(
+  Container,
+  null,
+  window.isLoggedIn ? React.createElement(Nav) : React.createElement(Login)
+);
+```
+---
+template: paypal
+## JSX is not HTML
+### There are differences
+
+???
+Primarily around property names. Typical JavaScriptisms still apply (`className` instead of `class`, camelCase instead of hyphenated, etc).
+---
+template: inverse
+## Writing a component
+---
+### React Components
+You can think of a React component as a pure function that, given some data, should always return the same value. In React, those datum are `state` and `props`.
+
+You can think of `state` as any piece of data a component owns and mutates, itself. `props` on the otherhand are data that come from higher up the component change—a component should never mutate it's owns `props`.
+
+For example, a component with input fields would store their current values in `state`. This is because, while the value can be set by external influences, the `value` is determined by the text inside the text input. There will never be a case where the input field displays one value and it's programmatic value is something different.
+
+However, whether or not that textbox should be visible could very well depend on a condition set higher up the component chain, is `isVisible` could be a `prop`.
+---
+### React Components (Continued)
+Let's take a look at a very simple React component:
+``` js
+export class SimpleComponent extends React.Component {
+  render() {
+    const { name } = this.props;
+    return (<p>{name}</p>);
+  }
+}
+SimpleComponent.DefaultProps = { name: 'Anonymous' };
+SimpleComponent.PropTypes = { name: React.PropTypes.String.isRequired };
+```
+&hellip; and here is how we would use it &hellip;
+``` js
+import SimpleComponent from './simple-component';
+React.render(
+  <SimpleComponent name='Jean-Charles' />,
+  document.body
+);
+```
+---
+template: inverse
+## Smart vs Dumb Components
+---
+### &ldquo;Smart&rdquo; vs &ldquo;Dumb&rdquo; Components
+
+In React, you often end up wanting to make as few so-called, &ldquo;smart&rdquo; components as possible. Data flows quite elegantly from parent to child and reasoning about the state of your application is greatly simplified when the number of moving parts is reduced.
+
+This goes back to the composition we've already talked about. In many cases, you will want a root application to take care of collecting various datum and pushing them down to children via `props`. The less logic in a component (about &ldquo;how&rdquo; to get data), the more reusable.
+---
+### &ldquo;Smart&rdquo; vs &ldquo;Dumb&rdquo; Components
+.small[
+``` js
+// TODO
+class Parent extends React.Component {
+  constructor() {
+    super();
+    this.state = { timerValue: 0 };
+    this.increment = this.increment.bind(this);
+  }
+  componentWillMount() {
+    this.timer = setTimeout(this.increment, 1000);
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  increment() {
+    this.state.timerValue += 1;
+  }
+  render() {
+    const { ...timer } = this.state;
+    return (
+      <div>
+        <Child {...timer} />
+      </div>
+    );
+  }
+}
+```
+]
+---
+class: center, middle, paypal
+## Let's try it out &hellip;
+    </textarea>
+    <script src="/js/remark-latest.min.js"></script>
+    <script src="/js/slideshow-init.js"></script>
+    <style>.remark-presenter-mode iframe {right: auto; left: 0;}</style>
+  </body>
+</html>
