@@ -54,7 +54,15 @@ export default class ConnectionGroup extends EventEmitter {
   }
   newConnection(ws, callback) {
     let session;
-    let { [this.name]: sid } = parse(ws.upgradeReq.headers.cookie);
+    let { cookie } = ws.upgradeReq.headers;
+    if (typeof cookie !== 'string') {
+      // we cannot associate this connect with a session
+      return ws.close(1001);
+    }
+    let { [this.name]: sid } = parse(cookie);
+    if (typeof sid !== 'string') {
+      return ws.close(1001);
+    }
     sid = sid.substr(0, 2) === 's:' ? unsign(sid.slice(2), this.secret) : sid;
     session = this.getSession(sid) || this.addSession(sid);
     let connection = new Connection({ws, sid});
