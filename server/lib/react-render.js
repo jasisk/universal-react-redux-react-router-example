@@ -1,37 +1,63 @@
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
-import createHistory from 'history/lib/createMemoryHistory';
-import { root as rootRoute } from '../../common/routes';
-import { App } from '../../common/components';
+import { root as routes } from '../../common/routes';
+import { RoutingContext, match } from 'react-router';
 import createStore from '../../common/store';
 import { createLocation } from 'history';
 import { Provider } from 'react-redux';
-import Router from 'react-router';
 import React from 'react';
 
-export default function (path, initialData, cb) {
+export default function (req, res, next) {
+  const { originalUrl: path, store } = req;
+  const initialData = store.withReq(req).toObject();
+  const location = createLocation(path);
 
+  match({ routes, location }, (error, redirectLocation, renderProps) => {
+    if (redirectLocation) {
+      return res.redirect(301, redirectLocation.pathname + redirectLocation.search);
+    }
+    if (error) {
+      return next(error);
+    }
+    if (renderProps === null) {
+      // ¯\_(ツ)_/¯ no route found - move along
+      return next('route');
+    }
 
-  let location = createLocation(path);
-  let history = createHistory({entries: [location]});
+    let store = createStore(initialData);
+    let elements = [
+      <Provider store={store}>
+      {() => <RoutingContext {...renderProps} />}
+      </Provider>
+    ];
 
-  let store = createStore(initialData);
-
-  let elements = [
-    <Provider store={store}>
-      {() => <Router history={history} routes={rootRoute} />}
-    </Provider>
-  ];
-
-  if (process.env.NODE_DEVTOOLS) {
-    elements.push(
-      <DebugPanel top right bottom>
+    if (process.env.NODE_DEVTOOLS) {
+      elements.push(
+        <DebugPanel top right bottom>
         <DevTools store={store} monitor={LogMonitor} />
-      </DebugPanel>
-    );
-  }
+        </DebugPanel>
+      );
+    }
 
-  let html = React.renderToString(<div>{elements}</div>);
-  let finalState = store.getState();
+    const markup = React.renderToString(<div>{elements}</div>);
+    const state = store.getState();
 
-  return {html, state: finalState};
+    res.send(render({markup, state}));
+  });
+}
+
+function render({markup, state}) {
+  return `
+<!doctype html>
+<html>
+  <head>
+    <link href="/styles/main.css" rel="stylesheet" type="text/css">
+  <body>
+    <div id="app">${markup}</div>
+    <script>
+      window.__INITIALSTATE__ = ${JSON.stringify(state)};
+    </script>
+    <script src="/js/bundle.js"></script>
+  </body>
+</html>
+  `;
 }

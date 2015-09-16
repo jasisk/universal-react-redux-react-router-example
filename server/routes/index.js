@@ -19,36 +19,13 @@ export default function routes(router) {
       req.group = groups.get(pid);
       return next();
     }
-    const error = new Error(`cannot find store with id: ${pid}`);
-    error.code = 404;
-    next(error);
+    // we're unable to handle this route. See if anyone else can.
+    next('route');
   });
 };
 
 function sentimentRoutes(router) {
   router.post('/sentiment', validateSentiment(), sentiment);
-
   router.get('/store', (req, res) => res.json(req.store.withReq(req).toObject()));
-
-  router.get('*', (req, res) => {
-    const { store, app: { kraken: config } } = req;
-    const reqStore = store.withReq(req);
-
-    const {html, state} = reactRender(req.originalUrl, reqStore.toObject());
-
-    res.send(`
-<!doctype html>
-<html>
-  <head>
-    <link href="/styles/main.css" rel="stylesheet" type="text/css">
-  <body>
-    <div id="app">${html}</div>
-    <script>
-      window.__INITIALSTATE__ = ${JSON.stringify(state)};
-    </script>
-    <script src="/js/bundle.js"></script>
-  </body>
-</html>
-    `);
-  });
+  router.get('*', reactRender);
 };
