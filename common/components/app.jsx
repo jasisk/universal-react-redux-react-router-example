@@ -40,12 +40,13 @@ export default class App extends React.Component {
 
 export class MainBar extends React.Component {
   render () {
-    const { children } = this.props;
+    const { children, params } = this.props;
     const { wsState, connections } = this.props;
     const { slide, counts, sentiments, addSentiment, removeSentiment } = this.props;
     const className = `state-${wsState}`;
     return (
       <div className={className} style={style}>
+        <Link to={`/presentation/${params.pid}/connections`} activeClassName='current' style={{display: 'none'}}>Current</Link>
         <SentimentsBar {...slide} {...{counts, sentiments, addSentiment, removeSentiment}} />
         {children && React.cloneElement(children, { connections })}
       </div>
