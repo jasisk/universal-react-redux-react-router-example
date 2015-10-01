@@ -6,7 +6,7 @@ import createStore from '../common/store';
 import * as mocks from '../common/mocks';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router';
-
+import ReactDOM from 'react-dom';
 import React from 'react';
 
 let history = new History();
@@ -27,7 +27,7 @@ if (process.env.NODE_DEVTOOLS) {
   );
 }
 
-React.render(
+ReactDOM.render(
   <div>{elements}</div>,
   document.getElementById('app')
 );

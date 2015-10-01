@@ -4,6 +4,7 @@ import { RoutingContext, match } from 'react-router';
 import createStore from '../../common/store';
 import { createLocation } from 'history';
 import { Provider } from 'react-redux';
+import ReactDOM from 'react-dom/server';
 import React from 'react';
 
 export default function (req, res, next) {
@@ -26,7 +27,7 @@ export default function (req, res, next) {
     let store = createStore(initialData);
     let elements = [
       <Provider store={store}>
-      {() => <RoutingContext {...renderProps} />}
+        <RoutingContext {...renderProps} />
       </Provider>
     ];
 
@@ -38,7 +39,7 @@ export default function (req, res, next) {
       );
     }
 
-    const markup = React.renderToString(<div>{elements}</div>);
+    const markup = ReactDOM.renderToString(<div>{elements}</div>);
     const state = store.getState();
 
     res.send(render({markup, state}));
